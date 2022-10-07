@@ -14,7 +14,7 @@ public class SQLHelper {
     @SneakyThrows
     public static void setup() {
         runner = new QueryRunner();
-        conn = DriverManager.getConnection("jbdc:mysql://localhost:3306/app", "app", "pass");
+        conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/app", "app", "pass");
     }
 
     @SneakyThrows
@@ -35,8 +35,8 @@ public class SQLHelper {
     public static String getValidVerifyCode(String login) {
         setup();
         String dataSql = "SELECT code FROM auth_codes" +
-                "JOIN users ON users.id = users.id" +
-                "WHERE login = 7" +
+                "JOIN users ON users_id = users.id" +
+                "WHERE login = ? " +
                 "ORDER BY created DESC LIMIT 1;";
         return runner.query(conn, dataSql, new ScalarHandler<String>(), login);
     }

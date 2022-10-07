@@ -1,9 +1,6 @@
 package ru.netology.sql.test;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import ru.netology.sql.data.UserData;
 import ru.netology.sql.helper.DataHelper;
 import ru.netology.sql.helper.SQLHelper;
@@ -28,8 +25,8 @@ public class AuthorizationTest {
         loginPage = new LoginPage();
     }
 
-    @AfterEach
-    public void tearnDown() {
+    @AfterAll
+    public void tearDown() {
         SQLHelper.resetUserStatus(user.getLogin());
         SQLHelper.resetVerifyCode();
     }

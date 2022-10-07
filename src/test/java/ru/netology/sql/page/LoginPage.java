@@ -9,7 +9,7 @@ import static com.codeborne.selenide.Selenide.$x;
 public class LoginPage {
     private SelenideElement loginInput = $x("//span[@data-test-id='login']//input");
     private SelenideElement loginInputEmptyNotification = $x("//span[@data-test-id='login']//span[@class='input__sub']");
-    private SelenideElement passwordInput = $x("//span[@data-test-id='password']");
+    private SelenideElement passwordInput = $x("//span[@data-test-id='password']//input");
     private SelenideElement passwordInputEmptyNotification = $x("//span[@data-test-id='password']//span[@class='input__sub']");
     private SelenideElement loginButton = $x("//button[@data-test-id='action-login']");
     private SelenideElement errorNotification = $x("//div[@data-test-id='error-notification']");
