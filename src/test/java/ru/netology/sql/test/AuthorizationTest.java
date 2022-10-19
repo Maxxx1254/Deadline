@@ -92,7 +92,7 @@ public class AuthorizationTest {
         loginPage.input(user.getLogin(), DataHelper.getRandomPassword());
         loginPage.failed();
         loginPage.clean();
-        loginPage.input(user.getLogin(), DataHelper.getRandomPassword());
+        loginPage.input(user.getLogin(), user.getPassword());
         loginPage.failed();
         assertEquals("Пользователь заблокирован.", loginPage.blocked());
     }
