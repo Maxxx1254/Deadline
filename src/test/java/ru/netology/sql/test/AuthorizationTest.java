@@ -1,14 +1,13 @@
 package ru.netology.sql.test;
 
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import ru.netology.sql.data.UserData;
 import ru.netology.sql.helper.DataHelper;
 import ru.netology.sql.helper.SQLHelper;
-import ru.netology.sql.page.DashboardPage;
 import ru.netology.sql.page.LoginPage;
-import ru.netology.sql.page.VerifyPage;
-
-import java.sql.SQLData;
 
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,38 +24,76 @@ public class AuthorizationTest {
         loginPage = new LoginPage();
     }
 
-    @AfterAll
+    @AfterEach
     public void tearDown() {
         SQLHelper.resetUserStatus(user.getLogin());
         SQLHelper.resetVerifyCode();
     }
 
-    @Test
-    @DisplayName("Тест happy path")
-    public void  test1() {
-        loginPage.input(user.getLogin(), user.getPassword());
-        VerifyPage verifyPage = loginPage.success();
-        verifyPage.input(DataHelper.getValidVerifiCode(user.getLogin()));
-        DashboardPage dashboardPage = verifyPage.success();
+    @AfterAll
+    public void cleanTable() {
+        SQLHelper.cleanTable();
     }
 
     @Test
-    @DisplayName("Тест с пустым полем пароль")
-    public void test2() {
+    public void shouldAuth() {
+        loginPage.input(user.getLogin(), user.getPassword());
+        var verifyPage = loginPage.success();
+        var code = DataHelper.getValidCode(user.getLogin());
+        verifyPage.input(code.getVerifyCode());
+        verifyPage.success();
+    }
+
+    @Test
+    public void ifEmptyPassword() {
         loginPage.input(user.getLogin(), null);
         loginPage.emptyPassword();
     }
 
     @Test
-    @DisplayName("Пользователя должно заблокировать после трехкратного невалидного ввода пароля")
-    public void test3() {
-        loginPage.input(user.getLogin(), DataHelper.getRandomPassword());
-        loginPage.failed();
-        loginPage.input(user.getLogin(), DataHelper.getRandomPassword());
-        loginPage.failed();
-        loginPage.input(user.getLogin(), DataHelper.getRandomPassword());
-        loginPage.failed();
+    public void ifEmptyLogin() {
+        loginPage.input(null, user.getPassword());
+        loginPage.emptyLogin();
+    }
 
-        assertEquals("blocked", SQLHelper.getUserStatus(user.getLogin()));
+    @Test
+    public void ifUnregisteredLogin() {
+        loginPage.input(DataHelper.getRandomLogin(), user.getPassword());
+        loginPage.failed();
+    }
+
+    @Test
+    public void ifInvalidPassword() {
+        loginPage.input(user.getLogin(), DataHelper.getRandomPassword());
+        loginPage.failed();
+    }
+
+    @Test
+    public void ifInvalidCode() {
+        loginPage.input(user.getLogin(), user.getPassword());
+        var verifyPage = loginPage.success();
+        verifyPage.input(DataHelper.getInvalidVerifyCode());
+        verifyPage.failed();
+    }
+
+    @Test
+    public void ifEmptyCode() {
+        loginPage.input(user.getLogin(), user.getPassword());
+        var verifyPage = loginPage.success();;
+        verifyPage.input(null);
+        verifyPage.emptyCode();
+    }
+
+    @Test
+    public void shouldBlocked() {
+        loginPage.input(user.getLogin(), DataHelper.getRandomPassword());
+        loginPage.failed();
+        loginPage.clean();
+        loginPage.input(user.getLogin(), DataHelper.getRandomPassword());
+        loginPage.failed();
+        loginPage.clean();
+        loginPage.input(user.getLogin(), DataHelper.getRandomPassword());
+        loginPage.failed();
+        assertEquals("Пользователь заблокирован.", loginPage.blocked());
     }
 }

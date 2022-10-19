@@ -6,11 +6,11 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$x;
 
 public class VerifyPage {
-    private SelenideElement codeInput = $x("//span[@data-test-id='code']//input");
-    private SelenideElement codeInputEmptyNotification = $x("//span[@data-test-id='code']//span[@class='input__sub']");
-    private SelenideElement verifyButton = $x("//button[@data-test-id='action-verify']");
-    private SelenideElement errorNotification = $x("//div[@data-test-id='error-notification']");
-    private SelenideElement errorButton = $x("//div[@data-test-id='error-notification']/button");
+    private final SelenideElement codeInput = $x("//span[@data-test-id='code']//input");
+    private final SelenideElement codeInputEmptyNotification = $x("//span[@data-test-id='code']//span[@class='input__sub']");
+    private final SelenideElement verifyButton = $x("//button[@data-test-id='action-verify']");
+    private final SelenideElement errorNotification = $x("//div[@data-test-id='error-notification']");
+    private final SelenideElement errorButton = $x("//div[@data-test-id='error-notification']/button");
 
     public VerifyPage() {
         codeInput.should(visible);
@@ -24,10 +24,10 @@ public class VerifyPage {
         verifyButton.click();
     }
 
-    public DashboardPage success() {
+    public void success() {
         errorNotification.should(hidden);
         errorButton.should(hidden);
-        return new DashboardPage();
+        new DashboardPage();
     }
     public void failed() {
         errorNotification.should(visible);

@@ -12,39 +12,47 @@ public class SQLHelper {
     private static Connection conn;
 
     @SneakyThrows
-    public static void setup() {
+    public static void setUp() {
         runner = new QueryRunner();
         conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/app", "app", "pass");
     }
 
+    
     @SneakyThrows
     public static void resetUserStatus(String login) {
-        setup();
+        setUp();
         String dataSql = "UPDATE users SET status = 'active' WHERE login = ?;";
         runner.update(conn, dataSql, login);
     }
 
     @SneakyThrows
     public static void resetVerifyCode() {
-        setup();
+        setUp();
         String dataSql = "DELETE FROM auth_codes";
         runner.update(conn,dataSql);
     }
 
     @SneakyThrows
-    public static String getValidVerifyCode(String login) {
-        setup();
-        String dataSql = "SELECT code FROM auth_codes" +
-                "JOIN users ON users_id = users.id" +
-                "WHERE login = ? " +
-                "ORDER BY created DESC LIMIT 1;";
-        return runner.query(conn, dataSql, new ScalarHandler<String>(), login);
+    public static String getVerifyCodeByLogin(String login, String sqlLimit) {
+        setUp();
+        var sqlQuery = "SELECT code FROM auth_codes " +
+                "JOIN users ON user_id = users.id " +
+                "WHERE login IN (?) " +
+                "ORDER BY created DESC LIMIT " + sqlLimit + ";";
+        return runner.query(conn, sqlQuery, new ScalarHandler<String>(), login);
     }
 
     @SneakyThrows
     public static String getUserStatus(String login) {
-        setup();
+        setUp();
         String dataSql = "SELECT status FROM users WHERE login = ?;";
         return runner.query(conn, dataSql, new ScalarHandler<String>(), login);
+    }
+
+    public static void cleanTable() {
+        String dataSqlCards = "TRUNCATE TABLE cards;";
+        String dataSqlAuthCodes = "TRUNCATE TABLE auth_codes;";
+        String dataSqlCardTransactions = "TRUNCATE TABLE card_transactions;";
+        String dataSqlUsers = "TRUNCATE TABLE users;";
     }
 }

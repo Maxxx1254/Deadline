@@ -1,7 +1,7 @@
 package ru.netology.sql.page;
 
 import com.codeborne.selenide.SelenideElement;
-import com.google.common.base.Verify;
+import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$x;
@@ -14,6 +14,8 @@ public class LoginPage {
     private SelenideElement loginButton = $x("//button[@data-test-id='action-login']");
     private SelenideElement errorNotification = $x("//div[@data-test-id='error-notification']");
     private SelenideElement errorButton = $x("//div[@data-test-id='error-notification']/button");
+    private SelenideElement blockedNotification = $x("//div[@data-test-id='blocked-notification']/button");
+
 
     public LoginPage() {
         loginInput.should(visible);
@@ -42,6 +44,16 @@ public class LoginPage {
         errorNotification.should(hidden);
     }
 
+    public void clean()  {
+        loginInput.click();
+        loginInput.sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+        passwordInput.click();
+        passwordInput.sendKeys(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.BACK_SPACE);
+    }
+
+    public SelenideElement blocked() {
+        return blockedNotification.should(visible);
+    }
     public void emptyLogin() {
         loginInputEmptyNotification.should(text("Поле обязательно для заполнения"));
     }
