@@ -2,7 +2,7 @@ package ru.netology.sql.helper;
 
 import lombok.SneakyThrows;
 import org.apache.commons.dbutils.QueryRunner;
-import  org.apache.commons.dbutils.handlers.ScalarHandler;
+import org.apache.commons.dbutils.handlers.ScalarHandler;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,7 +17,7 @@ public class SQLHelper {
         conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/app", "app", "pass");
     }
 
-    
+
     @SneakyThrows
     public static void resetUserStatus(String login) {
         setUp();
@@ -29,7 +29,7 @@ public class SQLHelper {
     public static void resetVerifyCode() {
         setUp();
         String dataSql = "DELETE FROM auth_codes";
-        runner.update(conn,dataSql);
+        runner.update(conn, dataSql);
     }
 
     @SneakyThrows
@@ -39,20 +39,37 @@ public class SQLHelper {
                 "JOIN users ON user_id = users.id " +
                 "WHERE login IN (?) " +
                 "ORDER BY created DESC LIMIT " + sqlLimit + ";";
-        return runner.query(conn, sqlQuery, new ScalarHandler<String>(), login);
+        return runner.query(conn, sqlQuery, new ScalarHandler<>(), login);
     }
 
     @SneakyThrows
-    public static String getUserStatus(String login) {
+    public void getUserStatus(String login) {
         setUp();
         String dataSql = "SELECT status FROM users WHERE login = ?;";
-        return runner.query(conn, dataSql, new ScalarHandler<String>(), login);
+        runner.query(conn, dataSql, new ScalarHandler<String>(), login);
     }
 
-    public static void cleanTable() {
+    @SneakyThrows
+    public void cleanTableCards() {
         String dataSqlCards = "TRUNCATE TABLE cards;";
+        runner.update(conn, dataSqlCards);
+    }
+
+    @SneakyThrows
+    public void cleanTableAuthCodes() {
         String dataSqlAuthCodes = "TRUNCATE TABLE auth_codes;";
+        runner.update(dataSqlAuthCodes);
+    }
+
+    @SneakyThrows
+    public void cleanTableCardTransactions() {
         String dataSqlCardTransactions = "TRUNCATE TABLE card_transactions;";
+        runner.update(dataSqlCardTransactions);
+    }
+
+    @SneakyThrows
+    public void cleanTableUsers() {
         String dataSqlUsers = "TRUNCATE TABLE users;";
+        runner.update(dataSqlUsers);
     }
 }

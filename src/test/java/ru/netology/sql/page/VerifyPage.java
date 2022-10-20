@@ -29,9 +29,9 @@ public class VerifyPage {
         errorButton.should(hidden);
         new DashboardPage();
     }
+
     public void failed() {
         errorNotification.should(visible);
-        errorNotification.$x("Ошибка! Неверно указан код! Попробуйте еще раз.");
         errorButton.click();
         errorNotification.should(hidden);
     }

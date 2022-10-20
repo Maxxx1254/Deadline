@@ -18,9 +18,10 @@ public class DataHelper {
     public static String getRandomLogin() {
         return faker.name().username();
     }
+
     @Value
     public static class VerifyCode {
-        private final String verifyCode;
+        String verifyCode;
     }
 
     public static VerifyCode getValidCode(String login) {

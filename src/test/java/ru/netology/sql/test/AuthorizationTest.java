@@ -10,7 +10,6 @@ import ru.netology.sql.helper.SQLHelper;
 import ru.netology.sql.page.LoginPage;
 
 import static com.codeborne.selenide.Selenide.open;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AuthorizationTest {
 
@@ -31,8 +30,12 @@ public class AuthorizationTest {
     }
 
     @AfterAll
-    public void cleanTable() {
-        SQLHelper.cleanTable();
+    public static void cleanTable() {
+        SQLHelper helper = new SQLHelper();
+        helper.cleanTableCards();
+        helper.cleanTableAuthCodes();
+        helper.cleanTableCardTransactions();
+        helper.cleanTableUsers();
     }
 
     @Test
@@ -79,7 +82,7 @@ public class AuthorizationTest {
     @Test
     public void ifEmptyCode() {
         loginPage.input(user.getLogin(), user.getPassword());
-        var verifyPage = loginPage.success();;
+        var verifyPage = loginPage.success();
         verifyPage.input(null);
         verifyPage.emptyCode();
     }
@@ -94,6 +97,6 @@ public class AuthorizationTest {
         loginPage.clean();
         loginPage.input(user.getLogin(), user.getPassword());
         loginPage.failed();
-        assertEquals("Пользователь заблокирован.", loginPage.blocked());
+        loginPage.blocked();
     }
 }
