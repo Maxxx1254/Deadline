@@ -50,26 +50,12 @@ public class SQLHelper {
     }
 
     @SneakyThrows
-    public void cleanTableCards() {
-        String dataSqlCards = "TRUNCATE TABLE cards;";
-        runner.update(conn, dataSqlCards);
-    }
-
-    @SneakyThrows
-    public void cleanTableAuthCodes() {
-        String dataSqlAuthCodes = "TRUNCATE TABLE auth_codes;";
-        runner.update(dataSqlAuthCodes);
-    }
-
-    @SneakyThrows
-    public void cleanTableCardTransactions() {
-        String dataSqlCardTransactions = "TRUNCATE TABLE card_transactions;";
-        runner.update(dataSqlCardTransactions);
-    }
-
-    @SneakyThrows
-    public void cleanTableUsers() {
-        String dataSqlUsers = "TRUNCATE TABLE users;";
-        runner.update(dataSqlUsers);
+    public static void cleanTable() {
+        setUp();
+        String dataSql = "DELETE FROM TABLE cards;" +
+                "DELETE FROM TABLE auth_codes;" +
+                "DELETE FROM TABLE card_transactions;" +
+                "DELETE FROM TABLE users;";
+        runner.update(conn, dataSql);
     }
 }

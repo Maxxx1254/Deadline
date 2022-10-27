@@ -31,11 +31,7 @@ public class AuthorizationTest {
 
     @AfterAll
     public static void cleanTable() {
-        SQLHelper helper = new SQLHelper();
-        helper.cleanTableCards();
-        helper.cleanTableAuthCodes();
-        helper.cleanTableCardTransactions();
-        helper.cleanTableUsers();
+        SQLHelper.cleanTable();
     }
 
     @Test
