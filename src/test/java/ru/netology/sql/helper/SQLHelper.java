@@ -52,10 +52,13 @@ public class SQLHelper {
     @SneakyThrows
     public static void cleanTable() {
         setUp();
-        String dataSql = "DELETE FROM TABLE cards;" +
-                "DELETE FROM TABLE auth_codes;" +
-                "DELETE FROM TABLE card_transactions;" +
-                "DELETE FROM TABLE users;";
-        runner.update(conn, dataSql);
+        String dataSqlCards = "DELETE FROM cards;";
+        runner.update(conn, dataSqlCards);
+        String dataSqlAuthCodes = "DELETE FROM auth_codes;";
+        runner.update(conn, dataSqlAuthCodes);
+        String dataSqlCardTransactions = "DELETE FROM card_transactions;";
+        runner.update(conn, dataSqlCardTransactions);
+        String dataSqlUsers = "DELETE FROM users;";
+        runner.update(conn, dataSqlUsers);
     }
 }
